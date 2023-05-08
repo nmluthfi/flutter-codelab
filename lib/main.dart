@@ -37,7 +37,6 @@ class MyAppState extends ChangeNotifier {
   var favorites = <WordPair>[];
 
   void toggleFavorite() {
-
     // dislike a word
     if (favorites.contains(current)) {
       favorites.remove(current);
@@ -45,6 +44,7 @@ class MyAppState extends ChangeNotifier {
     } else {
       favorites.add(current);
     }
+    // notify the state whenever the list of favorites changes
     notifyListeners();
   }
 }
@@ -55,6 +55,13 @@ class MyHomePage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
 
+    IconData icon;
+    if (appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -62,11 +69,24 @@ class MyHomePage extends StatelessWidget {
           children: [
             BigCard(pair: pair),
             SizedBox(height: 20),
-            ElevatedButton(
-              child: Text('Next'),
-              onPressed: () {
-                appState.getNext();
-              },
+            Row(
+              mainAxisSize: MainAxisSize.min,              
+              children: [
+                ElevatedButton.icon(
+                  icon: Icon(icon),
+                  label: Text('Like'),
+                  onPressed: (){
+                    appState.toggleFavorite();
+                  },               
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  child: Text('Next'),
+                  onPressed: () {
+                    appState.getNext();
+                  },
+                ),                
+              ],
             ),
           ],
         ),
