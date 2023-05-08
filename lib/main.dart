@@ -33,11 +33,15 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  // likes functionality
   var favorites = <WordPair>[];
 
   void toggleFavorite() {
+
+    // dislike a word
     if (favorites.contains(current)) {
       favorites.remove(current);
+    // like a word
     } else {
       favorites.add(current);
     }
